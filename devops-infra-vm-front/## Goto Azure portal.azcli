@@ -1,0 +1,39 @@
+## Goto Azure portal 
+##### > resource groups [rg-private-aks-demo, if you followed the blog] 
+##### > Virtual Machine [vm-bastion] 
+##### > Click on "Bastion" on the left-hand pane 
+##### > Enter the bastion_admin username and password you set in your .tfvars and Login
+##### > Allow clipboard access to the new tab that opens a cloud shell to our VM
+
+## Enter the Service Principal credentials 
+#### and run following commands to test whether the setup works, 
+#### and to access the AKS cluster
+ARM_CLIENT_ID= "e1862bda-63c2-4e6a-b654-7a331ef07b1b"
+ARM_CLIENT_SECRET= "vWq7Xvg3-ho-tZJebQ9eRMW2J-5dJ7Uuwb"
+ARM_SUBSCRIPTION_ID= "1d5e1dbd-17d7-4fc2-a3fd-7ec1f2b4e798"
+ARM_TENANT_ID= "505e5f9c-ce37-4f38-81c9-15e15720a73f"
+    
+## Install AzureCLI
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+## Install Kubernetes CLI
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+## Test installation
+kubectl version --client
+
+## Uncomment to enable bash auto completion
+# source <(kubectl completion bash)
+
+## Login to Azure with service principal you have for the terraform authorization or your own username/password
+az login --service-principal -u "e1862bda-63c2-4e6a-b654-7a331ef07b1b" -p "vWq7Xvg3-ho-tZJebQ9eRMW2J-5dJ7Uuwb" --tenant "505e5f9c-ce37-4f38-81c9-15e15720a73f"
+
+## Get the Kubeconfig
+az aks get-credentials --name aks-my-cluster \
+    --resource-group rg-private-aks-demo \
+    --subscription "1d5e1dbd-17d7-4fc2-a3fd-7ec1f2b4e798" \
+    --admin
+
+## Check connection
+kubectl get pods -A 
