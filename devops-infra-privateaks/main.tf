@@ -22,8 +22,7 @@ variable "aks_service_principal" {
   default = {
     "client_id"    = "e1862bda-63c2-4e6a-b654-7a331ef07b1b"
     "client_secret" = "vWq7Xvg3-ho-tZJebQ9eRMW2J-5dJ7Uuwb"
-  }
-  
+  }  
 }
 
 variable "bastion_admin" {
@@ -33,7 +32,6 @@ variable "bastion_admin" {
     "password" = "Colombia2020."
   }  
 }
-
 
 ##
 # Create a resource group for the azure resources
@@ -133,7 +131,7 @@ resource "azurerm_kubernetes_cluster" "my_aks" {
   default_node_pool {
     name           = "default"
     node_count     = 1
-    vm_size        = "Standard_D2_v2"
+    vm_size        = "Standard_DS1_v2"
     vnet_subnet_id = azurerm_subnet.snet_cluster.id
   }
 
@@ -173,7 +171,7 @@ resource "azurerm_linux_virtual_machine" "example" {
   name                            = "vm-bastion"
   location                        = var.location.value
   resource_group_name             = azurerm_resource_group.my_rg.name
-  size                            = "Standard_D2_v2"
+  size                            = "Standard_B1s"
   admin_username                  = var.bastion_admin.username
   admin_password                  = var.bastion_admin.password
   disable_password_authentication = false
